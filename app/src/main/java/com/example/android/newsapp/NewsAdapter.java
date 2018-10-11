@@ -22,6 +22,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
     public NewsAdapter(Context context, List<News> news) {
         super(context, 0, news);
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Check if there is an existing list item view (called convertView) that we can reuse,
@@ -31,10 +32,10 @@ public class NewsAdapter extends ArrayAdapter<News> {
             convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.news_list_item, parent, false);
         }
-        TextView title =  convertView.findViewById(R.id.title);
-        TextView author =  convertView.findViewById(R.id.author);
-        TextView date =  convertView.findViewById(R.id.date);
-        TextView section =  convertView.findViewById(R.id.section);
+        TextView title = convertView.findViewById(R.id.title);
+        TextView author = convertView.findViewById(R.id.author);
+        TextView date = convertView.findViewById(R.id.date);
+        TextView section = convertView.findViewById(R.id.section);
 
         News currentNews = getItem(position);
         title.setText(currentNews.getTitle());

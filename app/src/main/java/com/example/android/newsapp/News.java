@@ -1,8 +1,5 @@
 package com.example.android.newsapp;
 
-import android.content.IntentFilter;
-
-import java.util.Date;
 
 /**
  * Created by USER on 10/4/2018.
@@ -47,6 +44,6 @@ public class News {
         return mSection;
     }
 
-    }
+}
 
 

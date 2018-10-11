@@ -1,6 +1,6 @@
 package com.example.android.newsapp;
 
-import android.net.Uri;
+import android.net.Uri;;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -26,16 +26,21 @@ import java.util.Locale;
  * Created by USER on 10/9/2018.
  */
 public class QueryUtils {
+    /**
+     * Tag for the log messages
+     */
+    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-     static String createStringUrl() {
+    // this fetch sport news from the guardian api
+    static String createStringUrl() {
         Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
+        builder.scheme("https")
                 .encodedAuthority("content.guardianapis.com")
                 .appendPath("search")
                 .appendQueryParameter("order-by", "newest")
                 .appendQueryParameter("show-references", "author")
                 .appendQueryParameter("show-tags", "contributor")
-                .appendQueryParameter("q", "Android")
+                .appendQueryParameter("pillar", "news")
                 .appendQueryParameter("api-key", "d62d871c-6980-41a1-9559-189997e15d4b");
         String url = builder.build().toString();
         return url;
@@ -46,11 +51,12 @@ public class QueryUtils {
         try {
             return new URL(stringUrl);
         } catch (MalformedURLException e) {
-            Log.e("Queryutils", "Error creating URL: ", e);
+            Log.e(LOG_TAG, "Error creating URL: ", e);
             return null;
         }
     }
 
+    // this formatted date to human readable
     private static String formatDate(String rawDate) {
         String jsonDatePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'";
         SimpleDateFormat jsonFormatter = new SimpleDateFormat(jsonDatePattern, Locale.US);
@@ -60,15 +66,16 @@ public class QueryUtils {
             SimpleDateFormat finalDateFormatter = new SimpleDateFormat(finalDatePattern, Locale.US);
             return finalDateFormatter.format(parsedJsonDate);
         } catch (ParseException e) {
-            Log.e("QueryUtils", "Error parsing JSON date: ", e);
+            Log.e(LOG_TAG, "Error parsing JSON date: ", e);
             return "";
         }
     }
 
+    // Make an HTTP request to the given URL and return a String as the response.
     static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
-        if (url == null){
+        if (url == null) {
             return jsonResponse;
         }
         HttpURLConnection urlConnection = null;
@@ -80,14 +87,14 @@ public class QueryUtils {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
             urlConnection.connect();
-            if (urlConnection.getResponseCode() == 200){
+            if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e("mainActivity", "Error response code: " + urlConnection.getResponseCode());
+                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e("Queryutils", "Error making HTTP request: ", e);
+            Log.e(LOG_TAG, "Error making HTTP request: ", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -129,7 +136,6 @@ public class QueryUtils {
                 String section = oneResult.getString("sectionName");
                 JSONArray tagsArray = oneResult.getJSONArray("tags");
                 String author = "";
-
                 if (tagsArray.length() == 0) {
                     author = null;
                 } else {
